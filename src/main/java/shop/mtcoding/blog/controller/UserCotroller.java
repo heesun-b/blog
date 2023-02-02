@@ -10,4 +10,19 @@ public class UserCotroller {
     public String home() {
         return "board/home";
     }
+
+    @GetMapping("/loginForm")
+    public String loginForm() {
+        return "user/loginForm";
+    }
+
+    @GetMapping("/joinForm")
+    public String joinForm() {
+        return "user/joinForm";
+    }
+
+    @GetMapping("/user/updateForm")
+    public String userUpdateForm() {
+        return "user/updateForm";
+    }
 }

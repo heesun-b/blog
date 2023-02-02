@@ -1,4 +1,3 @@
-
 server:
   port: 8080
   servlet:
@@ -17,6 +16,13 @@ spring:
   output:
     ansi:
       enabled: always
+  sql:
+    init:
+      schema-locations:
+      - classpath:db/table.sql 
+      data-locations:
+      - classpath:db/data.sql
+
   mvc:
     view:
       prefix: /WEB-INF/view/
@@ -26,4 +32,4 @@ mybatis:
   mapper-locations:
   - classpath:mapper/**.xml
   configuration:
-    map-underscore-to-camel-case: true
+    map-underscore-to-camel-case: true 

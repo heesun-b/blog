@@ -2,14 +2,10 @@ package shop.mtcoding.blog.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @Controller
 public class UserCotroller {
-
-    @GetMapping("/")
-    public String home() {
-        return "board/home";
-    }
 
     @GetMapping("/loginForm")
     public String loginForm() {
@@ -21,8 +17,13 @@ public class UserCotroller {
         return "user/joinForm";
     }
 
-    @GetMapping("/user/updateForm")
-    public String userUpdateForm() {
+    @GetMapping("/user/{id}/updateForm")
+    public String userUpdateForm(@PathVariable int id) {
         return "user/updateForm";
+    }
+
+    @GetMapping("/logout")
+    public String logout() {
+        return "redirect:/";
     }
 }

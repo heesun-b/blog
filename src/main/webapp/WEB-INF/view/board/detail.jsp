@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
 <%@ include file="../layout/header.jsp" %>
 
     <div class="container my-3">
@@ -9,6 +10,8 @@
 
         <div class="mb-2">
             글 번호 : <span id="id"><i>3 </i></span> 작성자 : <span><i>ssar </i></span>
+             <i id="heart" class="fa-regular fa-heart my-cursor my-xl"></i>
+
         </div>
 
         <div>
@@ -45,4 +48,14 @@
         </div>
     </div>
     
+    <script>
+        $("#heart").click(() => {
+
+            $("#heart").toggleClass("fa-solid");
+            // $("#heart").removeClass("fa-regular");
+            // $("#heart").addClass("fa-solid");
+            // $("#heart").addClass("color");
+
+        })
+    </script>
 <%@ include file="../layout/footer.jsp" %>

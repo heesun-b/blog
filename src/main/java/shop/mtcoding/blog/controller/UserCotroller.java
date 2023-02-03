@@ -1,11 +1,36 @@
 package shop.mtcoding.blog.controller;
 
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+
+import shop.mtcoding.blog.dto.user.UserRequestDto.JoinRequestDto;
+import shop.mtcoding.blog.handler.ex.CustomException;
+import shop.mtcoding.blog.model.BoardRepository;
+import shop.mtcoding.blog.model.User;
+import shop.mtcoding.blog.model.UserRepository;
+import shop.mtcoding.blog.service.UserService;
 
 @Controller
 public class UserCotroller {
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private HttpSession session;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private BoardRepository boardRepository;
 
     @GetMapping("/loginForm")
     public String loginForm() {
@@ -26,4 +51,31 @@ public class UserCotroller {
     public String logout() {
         return "redirect:/";
     }
+
+    @PostMapping("/join")
+    public String join(JoinRequestDto joinRequestDto) {
+        int result = userService.join(joinRequestDto);
+        // int result2 = userRepository.insert(joinRequestDto);
+        if (joinRequestDto.getUsername() == null || joinRequestDto.getUsername().isEmpty()) {
+            new CustomException("username을 입력해주세요");
+        }
+        if (joinRequestDto.getPassword() == null || joinRequestDto.getPassword().isEmpty()) {
+            new CustomException("password를 입력해주세요");
+        }
+        if (result != 1) {
+            new CustomException("회원가입 실패");
+        }
+        return "redirect:/loginForm";
+    }
+
+    @PostMapping("/login")
+    public String login(String username, String password) {
+        User user = userRepository.findByUsernameAndPassword(username, password);
+        if (user == null) {
+            return "redirect:/login";
+        }
+        session.setAttribute("principal", user);
+        return "redirect:/";
+    }
+
 }

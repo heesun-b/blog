@@ -11,4 +11,8 @@
   <insert id="insert">
   insert into user_tb(username, password, email, created_at) values (#{username}, #{password}, #{email}, now())
   </insert>
+
+  <select id ="findByUsername" resultType="shop.mtcoding.blog.model.User">
+  select * from user_tb where username = #{username}
+  </select>
 </mapper>

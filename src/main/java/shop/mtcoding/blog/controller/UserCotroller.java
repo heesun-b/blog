@@ -1,16 +1,15 @@
 package shop.mtcoding.blog.controller;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import shop.mtcoding.blog.dto.user.UserRequestDto.JoinRequestDto;
+import shop.mtcoding.blog.dto.user.UserRequestDto.LoginRequestDto;
 import shop.mtcoding.blog.handler.ex.CustomException;
 import shop.mtcoding.blog.model.BoardRepository;
 import shop.mtcoding.blog.model.User;
@@ -49,32 +48,41 @@ public class UserCotroller {
 
     @GetMapping("/logout")
     public String logout() {
+        session.invalidate();
         return "redirect:/";
     }
 
     @PostMapping("/join")
     public String join(JoinRequestDto joinRequestDto) {
-        int result = userService.join(joinRequestDto);
         // int result2 = userRepository.insert(joinRequestDto);
         if (joinRequestDto.getUsername() == null || joinRequestDto.getUsername().isEmpty()) {
-            new CustomException("username을 입력해주세요");
+            throw new CustomException("username을 입력해주세요");
         }
         if (joinRequestDto.getPassword() == null || joinRequestDto.getPassword().isEmpty()) {
-            new CustomException("password를 입력해주세요");
+            throw new CustomException("password를 입력해주세요");
         }
+        if (joinRequestDto.getEmail() == null || joinRequestDto.getEmail().isEmpty()) {
+            throw new CustomException("email을 입력해주세요");
+        }
+        int result = userService.join(joinRequestDto);
         if (result != 1) {
-            new CustomException("회원가입 실패");
+            throw new CustomException("회원가입 실패 : 동일한 username이 존재합니다.");
         }
         return "redirect:/loginForm";
     }
 
     @PostMapping("/login")
-    public String login(String username, String password) {
-        User user = userRepository.findByUsernameAndPassword(username, password);
-        if (user == null) {
-            return "redirect:/login";
+    public String login(LoginRequestDto loginRequestDto) {
+        if (loginRequestDto.getUsername() == null || loginRequestDto.getUsername().isEmpty()) {
+            throw new CustomException("username을 입력해주세요");
         }
-        session.setAttribute("principal", user);
+        if (loginRequestDto.getPassword() == null || loginRequestDto.getPassword().isEmpty()) {
+            throw new CustomException("password를 입력해주세요");
+        }
+
+        User principal = userService.login(loginRequestDto);
+
+        session.setAttribute("principal", principal);
         return "redirect:/";
     }
 

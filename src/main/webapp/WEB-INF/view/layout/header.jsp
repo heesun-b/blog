@@ -34,37 +34,37 @@
                         <span class="navbar-toggler-icon"></span>
                     </button>
                     <div class="collapse navbar-collapse justify-content-between" id="collapsibleNavbar">
-                    <c:choose>
-                       <c:when test="${principal==null}">
-                       <ul class="navbar-nav">
-                            <li class="nav-item">
-                                <a class="nav-link" href="/loginForm">로그인</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/joinForm">회원가입</a>
-                            </li>
-                        </ul>
-                       </c:when>
-                    
-                       <c:otherwise>
-                           <ul class="navbar-nav">
-                            <li class="nav-item">
-                                <a class="nav-link" href="/board/saveForm">글쓰기</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/user/updateForm">회원정보</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/logout">로그아웃</a>
-                            </li>
-                        </ul>
-                        <div>
-                            <a href="/user/profileUpdate"><img src="/images/profile.jfif" style="width: 35px;"
-                                    class="rounded-circle" alt="Cinque Terre"></a>
-                        </div>
-                       </c:otherwise>
-                    </c:choose>
-                    
+                        <c:choose>
+                            <c:when test="${principal==null}">
+                                <ul class="navbar-nav">
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/loginForm">로그인</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/joinForm">회원가입</a>
+                                    </li>
+                                </ul>
+                            </c:when>
+
+                            <c:otherwise>
+                                <ul class="navbar-nav">
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/board/saveForm">글쓰기</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/user/updateForm">회원정보</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/logout">로그아웃</a>
+                                    </li>
+                                </ul>
+                                <div>
+                                    <a href="/user/profileUpdate"><img src="/images/profile.jfif" style="width: 35px;"
+                                            class="rounded-circle" alt="Cinque Terre"></a>
+                                </div>
+                            </c:otherwise>
+                        </c:choose>
+
                     </div>
 
                 </div>

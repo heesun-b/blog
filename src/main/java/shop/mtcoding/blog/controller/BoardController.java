@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import shop.mtcoding.blog.dto.board.BoardRequestDto.BoardSaveRequestDto;
+import shop.mtcoding.blog.dto.board.BoardRequest.BoardSaveRequestDto;
 import shop.mtcoding.blog.handler.ex.CustomException;
 import shop.mtcoding.blog.model.Board;
 import shop.mtcoding.blog.model.BoardRepository;
@@ -75,7 +75,10 @@ public class BoardController {
             throw new CustomException("Content를 입력해주세요");
         }
 
-        boardService.write(boardSaveRequestDto);
+        if (boardSaveRequestDto.getTitle().length() > 100) {
+            throw new CustomException("title의 길이가 100자 이하여야 합니다");
+        }
+        boardService.save(boardSaveRequestDto, principal.getId());
 
         return "redirect:/";
     }

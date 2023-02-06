@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import shop.mtcoding.blog.dto.user.UserRequestDto.JoinRequestDto;
-import shop.mtcoding.blog.dto.user.UserRequestDto.LoginRequestDto;
+import shop.mtcoding.blog.dto.user.UserRequest.JoinRequestDto;
+import shop.mtcoding.blog.dto.user.UserRequest.LoginRequestDto;
 import shop.mtcoding.blog.handler.ex.CustomException;
 import shop.mtcoding.blog.model.User;
 import shop.mtcoding.blog.model.UserRepository;
@@ -25,7 +25,7 @@ public class UserService {
         int result = userRepository.insert(joinRequestDto.getUsername(), joinRequestDto.getPassword(),
                 joinRequestDto.getEmail());
         if (result != 1) {
-            throw new CustomException("회원가입 실패 : 동일한 username이 존재합니다.");
+            throw new CustomException("회원가입 실패");
         }
     }
 

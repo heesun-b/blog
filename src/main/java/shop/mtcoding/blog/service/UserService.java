@@ -16,7 +16,7 @@ public class UserService {
     private UserRepository userRepository;
 
     @Transactional
-    public int join(JoinRequestDto joinRequestDto) {
+    public void join(JoinRequestDto joinRequestDto) {
         User sameUser = userRepository.findByUsername(joinRequestDto.getUsername());
         if (sameUser != null) {
             throw new CustomException("동일한 username이 존재합니다.");
@@ -24,8 +24,9 @@ public class UserService {
 
         int result = userRepository.insert(joinRequestDto.getUsername(), joinRequestDto.getPassword(),
                 joinRequestDto.getEmail());
-        // username 중복체크
-        return result;
+        if (result != 1) {
+            throw new CustomException("회원가입 실패 : 동일한 username이 존재합니다.");
+        }
     }
 
     @Transactional(readOnly = true)

@@ -64,10 +64,8 @@ public class UserCotroller {
         if (joinRequestDto.getEmail() == null || joinRequestDto.getEmail().isEmpty()) {
             throw new CustomException("email을 입력해주세요");
         }
-        int result = userService.join(joinRequestDto);
-        if (result != 1) {
-            throw new CustomException("회원가입 실패 : 동일한 username이 존재합니다.");
-        }
+        userService.join(joinRequestDto);
+
         return "redirect:/loginForm";
     }
 

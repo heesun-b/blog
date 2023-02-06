@@ -13,6 +13,6 @@ public class CustomExceptionHandler {
 
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<?> customException(CustomException e) {
-        return new ResponseEntity<>(Script.back(e.getMessage()), HttpStatus.BAD_REQUEST); //
+        return new ResponseEntity<>(Script.back(e.getMessage()), e.getStatus()); //
     }
 }

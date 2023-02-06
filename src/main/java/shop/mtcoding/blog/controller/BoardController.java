@@ -5,19 +5,26 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import shop.mtcoding.blog.dto.board.BoardRequestDto.BoardSaveRequestDto;
+import shop.mtcoding.blog.handler.ex.CustomException;
 import shop.mtcoding.blog.model.Board;
 import shop.mtcoding.blog.model.BoardRepository;
 import shop.mtcoding.blog.model.User;
 import shop.mtcoding.blog.model.UserRepository;
+import shop.mtcoding.blog.service.BoardService;
 
 @Controller
 public class BoardController {
+
+    @Autowired
+    private BoardService boardService;
 
     @Autowired
     private HttpSession session;
@@ -48,22 +55,28 @@ public class BoardController {
     }
 
     @GetMapping("/board/saveForm")
-    public String writeForm() {
+    public String saveForm() {
         return "board/saveForm";
     }
 
     @PostMapping("/board")
-    public String write(String title, String content) {
-        User user = (User) session.getAttribute("principal");
+    public String save(BoardSaveRequestDto boardSaveRequestDto) {
+        User principal = (User) session.getAttribute("principal");
 
-        if (user == null) {
-            return "redirect:/";
+        if (principal == null) {
+            throw new CustomException("인증이 되지 않았습니다.", HttpStatus.UNAUTHORIZED);
         }
 
-        int result = boardRepository.insert(user.getId(), user.getUsername(), title, content);
-        if (result != 1) {
-            return "redirect:board/saveForm";
+        if (boardSaveRequestDto.getTitle() == null || boardSaveRequestDto.getTitle().isEmpty()) {
+            throw new CustomException("title을 입력해주세요");
         }
+
+        if (boardSaveRequestDto.getContent() == null || boardSaveRequestDto.getContent().isEmpty()) {
+            throw new CustomException("Content를 입력해주세요");
+        }
+
+        boardService.write(boardSaveRequestDto);
+
         return "redirect:/";
     }
 

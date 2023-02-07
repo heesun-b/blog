@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -129,6 +130,21 @@ public class BoardControllerTest {
         // then
         resultActions.andExpect(status().isOk());
         resultActions.andExpect(jsonPath("$.code").value(1));
+
+    }
+
+    @Test
+    public void update_test() throws Exception {
+
+        // given
+        int id = 1;
+        String requestBody = "title=변경한제목&content=변경한내용";
+        // when
+        ResultActions resultActions = mvc.perform(put("/board/" + id).content(requestBody)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE).session(mockSession));
+
+        // then
+        resultActions.andExpect(status().is3xxRedirection());
 
     }
 }

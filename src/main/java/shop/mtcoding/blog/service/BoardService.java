@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import shop.mtcoding.blog.dto.board.BoardRequest.BoardSaveRequestDto;
+import shop.mtcoding.blog.dto.board.BoardRequest.BoardUpdateRequestDto;
 import shop.mtcoding.blog.dto.board.BoardResponse.BoardMainResponseDto;
 import shop.mtcoding.blog.handler.ex.CustomApiException;
 import shop.mtcoding.blog.handler.ex.CustomException;
@@ -55,6 +56,28 @@ public class BoardService {
             // 로그를 남겨야 함 (DB 혹은 File)
 
         }
+    }
+
+    @Transactional
+    public void boardUpdate(int id, int userId, BoardUpdateRequestDto boardUpdateRequestDto) {
+        Board boardPS = boardRepository.findById(id);
+
+        if (boardPS == null) {
+            throw new CustomApiException("게시물이 존재하지 않습니다.");
+        }
+
+        if (boardPS.getUserId() != userId) {
+            throw new CustomApiException("게시물 수정 권한이 없습니다.", HttpStatus.FORBIDDEN);
+        }
+
+        try {
+            boardRepository.updateById(id, boardUpdateRequestDto.getTitle(),
+                    boardUpdateRequestDto.getContent());
+        } catch (Exception e) {
+            throw new CustomApiException("서버에 일시적인 문제가 생겼습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+
+        }
+
     }
 
 }

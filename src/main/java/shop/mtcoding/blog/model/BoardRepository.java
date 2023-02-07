@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import shop.mtcoding.blog.dto.board.BoardRequest.BoardUpdateRequestDto;
 import shop.mtcoding.blog.dto.board.BoardResponse.BoardDetailResponseDto;
 import shop.mtcoding.blog.dto.board.BoardResponse.BoardMainResponseDto;
 

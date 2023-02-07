@@ -13,10 +13,12 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import shop.mtcoding.blog.dto.ResponseDto;
 import shop.mtcoding.blog.dto.board.BoardRequest.BoardSaveRequestDto;
+import shop.mtcoding.blog.dto.board.BoardRequest.BoardUpdateRequestDto;
 import shop.mtcoding.blog.dto.board.BoardResponse.BoardDetailResponseDto;
 import shop.mtcoding.blog.dto.board.BoardResponse.BoardMainResponseDto;
 import shop.mtcoding.blog.handler.ex.CustomApiException;
@@ -41,6 +43,35 @@ public class BoardController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @PutMapping("/board/{id}")
+    public @ResponseBody ResponseEntity<?> update(@PathVariable int id, BoardUpdateRequestDto boardUpdateRequestDto) {
+        User principal = (User) session.getAttribute("principal");
+
+        if (principal == null) {
+            throw new CustomApiException("인증이 되지 않았습니다.", HttpStatus.UNAUTHORIZED);
+        }
+
+        System.out.println(boardUpdateRequestDto);
+
+        if (boardUpdateRequestDto.getTitle() == null || boardUpdateRequestDto.getTitle().isEmpty()) {
+            throw new CustomException("title을 입력해주세요");
+        }
+
+        if (boardUpdateRequestDto.getContent() == null || boardUpdateRequestDto.getContent().isEmpty()) {
+            throw new CustomException("Content를 입력해주세요");
+        }
+
+        if (boardUpdateRequestDto.getTitle().length() > 100) {
+            throw new CustomException("title의 길이가 100자 이하여야 합니다");
+        }
+
+        // Board board = boardRepository.findById(id);
+
+        boardService.boardUpdate(id, principal.getId(), boardUpdateRequestDto);
+
+        return new ResponseEntity<>(new ResponseDto<>(1, "수정 완료", null), HttpStatus.OK);
+    }
 
     @DeleteMapping("/board/{id}")
     public @ResponseBody ResponseEntity<?> delete(@PathVariable int id) {
@@ -69,7 +100,9 @@ public class BoardController {
     }
 
     @GetMapping("/board/{id}/updateForm")
-    public String boardupdateForm(@PathVariable int id) {
+    public String boardupdateForm(@PathVariable int id, Model model) {
+        Board board = boardRepository.findById(id);
+        model.addAttribute("dto", board);
         return "board/updateForm";
     }
 

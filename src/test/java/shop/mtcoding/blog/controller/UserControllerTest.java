@@ -38,7 +38,7 @@ public class UserControllerTest {
 
         // when
         ResultActions resultActions = mvc.perform(post("/join").content(requestBody)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE));
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED));
 
         // then
         resultActions.andExpect(status().is3xxRedirection());

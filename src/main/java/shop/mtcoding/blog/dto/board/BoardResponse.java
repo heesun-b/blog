@@ -11,5 +11,6 @@ public class BoardResponse {
         private int id;
         private String title;
         private String username;
+
     }
 }

@@ -1,5 +1,7 @@
 package shop.mtcoding.blog.service;
 
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,9 +10,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import shop.mtcoding.blog.dto.board.BoardRequest.BoardSaveRequestDto;
+import shop.mtcoding.blog.dto.board.BoardResponse.BoardMainResponseDto;
 import shop.mtcoding.blog.handler.ex.CustomException;
 import shop.mtcoding.blog.model.BoardRepository;
 
+@Transactional(readOnly = true)
 @Service
 public class BoardService {
 
@@ -27,4 +31,5 @@ public class BoardService {
             throw new CustomException("글쓰기 실패", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 }

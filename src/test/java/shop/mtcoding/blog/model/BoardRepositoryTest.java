@@ -27,6 +27,7 @@ public class BoardRepositoryTest {
         String responseBody = om.writeValueAsString(boardMainResponseDto);
         System.out.print("테스트 : " + responseBody);
 
+        // System.out.println(boardMainResponseDto);
         assertThat(boardMainResponseDto.get(5).getUsername()).isEqualTo("love");
     }
 }

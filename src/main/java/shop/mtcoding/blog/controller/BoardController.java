@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import shop.mtcoding.blog.dto.board.BoardRequest.BoardSaveRequestDto;
+import shop.mtcoding.blog.dto.board.BoardResponse.BoardMainResponseDto;
 import shop.mtcoding.blog.handler.ex.CustomException;
 import shop.mtcoding.blog.model.Board;
 import shop.mtcoding.blog.model.BoardRepository;
@@ -35,10 +36,10 @@ public class BoardController {
     @Autowired
     private UserRepository userRepository;
 
-    @GetMapping("/")
-    public String home(Model model) {
-        List<Board> boardList = boardRepository.findAll();
-        model.addAttribute("boardList", boardList);
+    @GetMapping({ "/", "/board" })
+    public String main(Model model) {
+        List<BoardMainResponseDto> dtos = boardRepository.findAllWithUser();
+        model.addAttribute("dtos", dtos);
         return "board/home";
     }
 

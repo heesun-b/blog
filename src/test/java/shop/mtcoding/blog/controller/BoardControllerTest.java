@@ -26,6 +26,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import shop.mtcoding.blog.dto.board.BoardResponse;
+import shop.mtcoding.blog.dto.board.BoardResponse.BoardDetailResponseDto;
 import shop.mtcoding.blog.model.User;
 
 /*
@@ -95,4 +96,19 @@ public class BoardControllerTest {
         assertThat(dtos.get(0).getTitle()).isEqualTo("제목1");
     }
 
+    @Test
+    public void detail_test() throws Exception {
+
+        // given
+        int id = 1;
+        // when
+        ResultActions resultActions = mvc.perform(get("/board/" + id));
+        Map<String, Object> map = resultActions.andReturn().getModelAndView().getModel();
+        BoardDetailResponseDto dto = (BoardDetailResponseDto) map.get("dto");
+        String model = om.writeValueAsString(dto);
+        System.out.print("테스트 : " + model);
+        // then
+        resultActions.andExpect(status().isOk());
+        assertThat(dto.getUserId()).isEqualTo(1);
+    }
 }

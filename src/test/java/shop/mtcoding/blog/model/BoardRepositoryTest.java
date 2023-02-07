@@ -30,4 +30,5 @@ public class BoardRepositoryTest {
         // System.out.println(boardMainResponseDto);
         assertThat(boardMainResponseDto.get(5).getUsername()).isEqualTo("love");
     }
+
 }

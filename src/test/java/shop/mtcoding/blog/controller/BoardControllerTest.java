@@ -1,8 +1,10 @@
 package shop.mtcoding.blog.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.sql.Timestamp;
@@ -24,6 +26,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
 
 import shop.mtcoding.blog.dto.board.BoardResponse;
 import shop.mtcoding.blog.dto.board.BoardResponse.BoardDetailResponseDto;
@@ -93,7 +96,7 @@ public class BoardControllerTest {
         resultActions.andExpect(status().isOk());
 
         assertThat(dtos.size()).isEqualTo(6);
-        assertThat(dtos.get(0).getTitle()).isEqualTo("제목1");
+        assertThat(dtos.get(0).getTitle()).isEqualTo("제목6");
     }
 
     @Test
@@ -110,5 +113,22 @@ public class BoardControllerTest {
         // then
         resultActions.andExpect(status().isOk());
         assertThat(dto.getUserId()).isEqualTo(1);
+    }
+
+    @Test
+    public void delete_test() throws Exception {
+
+        // given
+        int id = 1;
+
+        // when
+        ResultActions resultActions = mvc.perform(delete("/board/" + id).session(mockSession));
+
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트: " + responseBody);
+        // then
+        resultActions.andExpect(status().isOk());
+        resultActions.andExpect(jsonPath("$.code").value(1));
+
     }
 }

@@ -14,6 +14,7 @@ public class HtmlParseTest {
     public void jsoup_test2() {
         String html = "<p>1</p><p><img src=\"data:image/png;base64,iVBORw0KG\"></p>";
         Document doc = Jsoup.parse(html);
+        System.out.println("doc:" + doc);
         Element el = doc.select("img").first();
         String s = el.attr("src");
         if (s == null) {

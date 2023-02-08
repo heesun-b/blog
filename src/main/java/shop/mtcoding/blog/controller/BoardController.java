@@ -121,7 +121,7 @@ public class BoardController {
     }
 
     @PostMapping("/board")
-    public String save(BoardSaveRequestDto boardSaveRequestDto) {
+    public @ResponseBody ResponseEntity<?> save(@RequestBody BoardSaveRequestDto boardSaveRequestDto) {
 
         User principal = (User) session.getAttribute("principal");
 
@@ -143,7 +143,7 @@ public class BoardController {
 
         boardService.save(boardSaveRequestDto, principal.getId());
 
-        return "redirect:/";
+        return new ResponseEntity<>(new ResponseDto<>(1, "게시글 등록 완료", null), HttpStatus.OK);
     }
 
 }

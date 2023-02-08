@@ -33,6 +33,8 @@ public class BoardService {
     @Transactional
     public void save(BoardSaveRequestDto boardSaveRequestDto, int userId) {
 
+        System.out.println(boardSaveRequestDto.getContent());
+        System.out.println(boardSaveRequestDto.getTitle());
         // content 내용을 document로 전환
         String img = Thumbnail.thumbnailParse(boardSaveRequestDto.getContent());
 

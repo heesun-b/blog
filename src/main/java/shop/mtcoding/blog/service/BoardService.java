@@ -1,7 +1,5 @@
 package shop.mtcoding.blog.service;
 
-import java.util.List;
-
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +9,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import shop.mtcoding.blog.dto.board.BoardRequest.BoardSaveRequestDto;
 import shop.mtcoding.blog.dto.board.BoardRequest.BoardUpdateRequestDto;
-import shop.mtcoding.blog.dto.board.BoardResponse.BoardMainResponseDto;
 import shop.mtcoding.blog.handler.ex.CustomApiException;
 import shop.mtcoding.blog.handler.ex.CustomException;
 import shop.mtcoding.blog.model.Board;
 import shop.mtcoding.blog.model.BoardRepository;
+import shop.mtcoding.blog.model.User;
 
 @Transactional(readOnly = true)
 @Service
@@ -59,14 +57,14 @@ public class BoardService {
     }
 
     @Transactional
-    public void boardUpdate(int id, int userId, BoardUpdateRequestDto boardUpdateRequestDto) {
+    public void boardUpdate(int id, int principalId, BoardUpdateRequestDto boardUpdateRequestDto) {
         Board boardPS = boardRepository.findById(id);
 
         if (boardPS == null) {
             throw new CustomApiException("게시물이 존재하지 않습니다.");
         }
 
-        if (boardPS.getUserId() != userId) {
+        if (boardPS.getUserId() != principalId) {
             throw new CustomApiException("게시물 수정 권한이 없습니다.", HttpStatus.FORBIDDEN);
         }
 
@@ -75,7 +73,6 @@ public class BoardService {
                     boardUpdateRequestDto.getContent());
         } catch (Exception e) {
             throw new CustomApiException("서버에 일시적인 문제가 생겼습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
-
         }
 
     }

@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import shop.mtcoding.blog.dto.ResponseDto;
 import shop.mtcoding.blog.dto.board.BoardRequest.BoardSaveRequestDto;
 import shop.mtcoding.blog.dto.board.BoardRequest.BoardUpdateRequestDto;
-import shop.mtcoding.blog.dto.board.BoardResponse.BoardDetailResponseDto;
 import shop.mtcoding.blog.dto.board.BoardResponse.BoardMainResponseDto;
 import shop.mtcoding.blog.handler.ex.CustomApiException;
 import shop.mtcoding.blog.handler.ex.CustomException;
@@ -45,29 +45,27 @@ public class BoardController {
     private UserRepository userRepository;
 
     @PutMapping("/board/{id}")
-    public @ResponseBody ResponseEntity<?> update(@PathVariable int id, BoardUpdateRequestDto boardUpdateRequestDto) {
+    public @ResponseBody ResponseEntity<?> update(@PathVariable int id,
+            @RequestBody BoardUpdateRequestDto boardUpdateRequestDto) {
         User principal = (User) session.getAttribute("principal");
 
         if (principal == null) {
             throw new CustomApiException("인증이 되지 않았습니다.", HttpStatus.UNAUTHORIZED);
         }
 
-        System.out.println(boardUpdateRequestDto);
-
         if (boardUpdateRequestDto.getTitle() == null || boardUpdateRequestDto.getTitle().isEmpty()) {
-            throw new CustomException("title을 입력해주세요");
+            throw new CustomApiException("title을 입력해주세요");
         }
 
         if (boardUpdateRequestDto.getContent() == null || boardUpdateRequestDto.getContent().isEmpty()) {
-            throw new CustomException("Content를 입력해주세요");
+            throw new CustomApiException("Content를 입력해주세요");
         }
 
         if (boardUpdateRequestDto.getTitle().length() > 100) {
-            throw new CustomException("title의 길이가 100자 이하여야 합니다");
+            throw new CustomApiException("title의 길이가 100자 이하여야 합니다");
         }
 
         // Board board = boardRepository.findById(id);
-
         boardService.boardUpdate(id, principal.getId(), boardUpdateRequestDto);
 
         return new ResponseEntity<>(new ResponseDto<>(1, "수정 완료", null), HttpStatus.OK);
@@ -101,8 +99,19 @@ public class BoardController {
 
     @GetMapping("/board/{id}/updateForm")
     public String boardupdateForm(@PathVariable int id, Model model) {
-        Board board = boardRepository.findById(id);
-        model.addAttribute("dto", board);
+        Board boardPS = boardRepository.findById(id);
+        User principal = (User) session.getAttribute("principal");
+
+        if (principal == null) {
+            throw new CustomException("인증이 되지 않았습니다.", HttpStatus.UNAUTHORIZED);
+        }
+        if (boardPS == null) {
+            throw new CustomException("게시글이 존재하지 않습니다.", HttpStatus.UNAUTHORIZED);
+        }
+        if (boardPS.getUserId() != principal.getId()) {
+            throw new CustomException("게시글 수정 권한이 없습니다.", HttpStatus.FORBIDDEN);
+        }
+        model.addAttribute("board", boardPS);
         return "board/updateForm";
     }
 

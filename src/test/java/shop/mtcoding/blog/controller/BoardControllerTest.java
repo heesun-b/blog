@@ -13,8 +13,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpSession;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +23,12 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jayway.jsonpath.JsonPath;
 
 import shop.mtcoding.blog.dto.board.BoardResponse;
+import shop.mtcoding.blog.dto.board.BoardRequest.BoardUpdateRequestDto;
 import shop.mtcoding.blog.dto.board.BoardResponse.BoardDetailResponseDto;
 import shop.mtcoding.blog.model.User;
 
@@ -40,6 +39,7 @@ import shop.mtcoding.blog.model.User;
  * AutoConfigureMockMvc는 Mock 환경의 ioc 컨테이너에 MockMvc Bean이 생성됨
  */
 
+@Transactional
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
 public class BoardControllerTest {
@@ -120,7 +120,7 @@ public class BoardControllerTest {
     public void delete_test() throws Exception {
 
         // given
-        int id = 1;
+        int id = 2;
 
         // when
         ResultActions resultActions = mvc.perform(delete("/board/" + id).session(mockSession));
@@ -135,16 +135,22 @@ public class BoardControllerTest {
 
     @Test
     public void update_test() throws Exception {
-
         // given
         int id = 1;
-        String requestBody = "title=변경한제목&content=변경한내용";
+        BoardUpdateRequestDto boardUpdateRequestDto = new BoardUpdateRequestDto();
+        boardUpdateRequestDto.setTitle("제목1변경");
+        boardUpdateRequestDto.setContent("내용1변경");
+        String requestBody = om.writeValueAsString(boardUpdateRequestDto);
+
         // when
-        ResultActions resultActions = mvc.perform(put("/board/" + id).content(requestBody)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE).session(mockSession));
+        ResultActions resultActions = mvc
+                .perform(put("/board/" + id).content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE).session(mockSession));
 
         // then
-        resultActions.andExpect(status().is3xxRedirection());
+        // resultActions.andExpect(status().isOk());
+
+        resultActions.andExpect(jsonPath("$.code").value(1));
 
     }
 }

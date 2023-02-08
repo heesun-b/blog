@@ -10,7 +10,7 @@
             <button id="btn-delete" class="btn btn-danger" onClick="deleteById(${dto.id})">삭제</button>
         </div>
     </c:if>
-
+    
 <script>
     function deleteById(id) {
     $.ajax({

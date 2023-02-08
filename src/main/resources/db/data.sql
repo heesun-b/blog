@@ -7,5 +7,6 @@ insert into board_tb(user_id, title, content,  created_at) values (2, '제목3',
 insert into board_tb(user_id, title, content,  created_at) values (1, '제목4', '44444444444',  now());
 insert into board_tb(user_id, title, content,  created_at) values (2, '제목5', '555555555',  now());
 insert into board_tb(user_id, title, content,  created_at) values (2, '제목6', '66666666666',  now());
+insert into board_tb(user_id, title, content,  created_at) values (2, '제목6', '66666666666',  now());
 
 commit;

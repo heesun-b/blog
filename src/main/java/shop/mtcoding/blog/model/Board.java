@@ -13,5 +13,6 @@ public class Board {
     private String username;
     private String title;
     private String content;
+    private String thumbnail;
     private Timestamp createdAt;
 }

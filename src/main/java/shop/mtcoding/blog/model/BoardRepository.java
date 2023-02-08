@@ -21,10 +21,10 @@ public interface BoardRepository {
         public Board findById(int id);
 
         public int insert(@Param("userId") int userId, @Param("title") String title,
-                        @Param("content") String content);
+                        @Param("content") String content, @Param("thumbnail") String thumbnail);
 
         public int updateById(@Param("id") int id, @Param("title") String title,
-                        @Param("content") String content);
+                        @Param("content") String content, @Param("thumbnail") String thumbnail);
 
         public int deleteById(int id);
 

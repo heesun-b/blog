@@ -140,6 +140,7 @@ public class BoardController {
         if (boardSaveRequestDto.getTitle().length() > 100) {
             throw new CustomException("title의 길이가 100자 이하여야 합니다");
         }
+
         boardService.save(boardSaveRequestDto, principal.getId());
 
         return "redirect:/";

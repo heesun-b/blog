@@ -10,6 +10,7 @@ create table board_tb (
     id int auto_increment primary key,
     user_id int, 
     title varchar(100) not null,
+    thumbnail longtext not null, 
     content text not null,
     created_at timestamp not null
 ); 
